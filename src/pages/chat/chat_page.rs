@@ -1,13 +1,13 @@
 use dioxus::prelude::*;
 
 use super::chat_layout::Bg;
-use crate::pages::chat::chat_hook::send_channel;
-use crate::pages::chat::chat_model::{ChatModel, MessageSender}; // <--- CHANGED: Use `futures` directly as per gloo-net docs
-                                                                // Shared navbar component.
+use crate::pages::chat::chat_hook::{send_channel, ChatSignal};
+use crate::pages::chat::chat_model::MessageSender; // <--- CHANGED: Use `futures` directly as per gloo-net docs
+                                                   // Shared navbar component.
 
 #[component]
 pub fn Chat() -> Element {
-    let mut chat_signal = ChatModel::new();
+    let mut chat_signal = ChatSignal::new();
     let _ = use_resource(move || async move {
         let _ = chat_signal.msg_type.read();
 
