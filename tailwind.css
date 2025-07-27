@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@layer components {
+    .content-height {
+        height: 500px;
+    }
+    .content-full {
+        height: 100%;
+    }
+}
