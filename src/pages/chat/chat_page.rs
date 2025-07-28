@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
 
 use super::chat_layout::Bg;
+use crate::pages::chat::box_customer_short::BoxCustomerShort;
 use crate::pages::chat::chat_hook::{send_channel, ChatSignal};
 use crate::pages::chat::chat_model::MessageSender; // <--- CHANGED: Use `futures` directly as per gloo-net docs
                                                    // Shared navbar component.
@@ -25,6 +26,7 @@ pub fn Chat() -> Element {
         div {
             class: "p-4 w-full",
             Bg{
+                left_config:rsx!{BoxCustomerShort{}},
                 message_container:rsx!{
                     for msg in chat_signal.msg_type.read().iter() {
                         match msg {

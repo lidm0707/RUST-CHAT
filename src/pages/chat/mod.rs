@@ -1,3 +1,5 @@
+pub mod box_customer_short;
+
 pub mod chat_hook;
 pub mod chat_layout;
 pub mod chat_model;
