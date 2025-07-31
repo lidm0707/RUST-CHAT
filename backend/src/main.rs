@@ -1,18 +1,12 @@
+use actix_cors::Cors;
 use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
-use serde::Deserialize;
-
-#[derive(Deserialize)]
-struct AuthRequest {
-    username: String,
-    password: String,
-}
+use shared::models::login_model::LoginModel;
 
 #[post("/auth")]
-async fn authenticate(info: web::Json<AuthRequest>) -> impl Responder {
-    let username = &info.username;
+async fn authenticate(info: web::Json<LoginModel>) -> impl Responder {
+    let username = &info.user;
     let password = &info.password;
 
-    // ตัวอย่างตรวจสอบง่าย ๆ (ควรแทนด้วยระบบฐานข้อมูลหรืออื่น ๆ)
     if username == "admin" && password == "secret" {
         HttpResponse::Ok().body("Authentication successful")
     } else {
@@ -24,8 +18,18 @@ async fn authenticate(info: web::Json<AuthRequest>) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     println!("Starting server on http://localhost:8999");
 
-    HttpServer::new(|| App::new().service(authenticate))
-        .bind("127.0.0.1:8999")?
-        .run()
-        .await
+    HttpServer::new(|| {
+        App::new()
+            .wrap(
+                Cors::default()
+                    .allow_any_origin() // ถ้าต้องการจำกัดโดเมนให้เปลี่ยนตรงนี้
+                    .allow_any_method()
+                    .allow_any_header()
+                    .max_age(3600),
+            )
+            .service(authenticate)
+    })
+    .bind("127.0.0.1:8999")?
+    .run()
+    .await
 }

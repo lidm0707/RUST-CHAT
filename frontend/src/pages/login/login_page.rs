@@ -12,7 +12,7 @@ pub fn Login() -> Element {
             let json = serde_json::to_string(&login_model).unwrap();
             println!("click");
 
-            let resp = Request::post("http://localhost:8080/login")
+            let resp = Request::post("http://localhost:8999/auth")
                 .header("Content-Type", "application/json")
                 .body(json);
 

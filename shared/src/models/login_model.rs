@@ -2,12 +2,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct LoginModel {
-    email: String,
-    password: String,
+    pub user: String,
+    pub password: String,
 }
 
 impl LoginModel {
-    pub fn new(email: String, password: String) -> Self {
-        LoginModel { email, password }
+    pub fn new(user: String, password: String) -> Self {
+        LoginModel { user, password }
     }
 }
