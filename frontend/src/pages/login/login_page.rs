@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use gloo_net::http::Request;
+use shared::models::login_model::LoginModel;
 
-use crate::pages::login::login_model::LoginModel;
 #[component]
 pub fn Login() -> Element {
     let onsubmit = move |evt: FormEvent| {

@@ -1,2 +1,24 @@
 [workspace]
 members = ["shared", "frontend", "backend"]
+resolver = "2"
+
+[profile.dev]
+opt-level = 0
+debug = true
+# ปรับแต่งอื่น ๆ ที่ต้องการ
+
+[profile.release]
+opt-level = 3
+debug = false
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"
+# ปรับแต่งอื่น ๆ ที่ต้องการ
+#
