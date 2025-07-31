@@ -1,5 +1,5 @@
 use actix_cors::Cors;
-use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use shared::models::login_model::LoginModel;
 
 #[post("/auth")]
@@ -12,6 +12,11 @@ async fn authenticate(info: web::Json<LoginModel>) -> impl Responder {
     } else {
         HttpResponse::Unauthorized().body("Invalid username or password")
     }
+}
+
+#[get("/health")]
+async fn index() -> impl Responder {
+    HttpResponse::Ok().body("Backend is running")
 }
 
 #[actix_web::main]
@@ -28,6 +33,7 @@ async fn main() -> std::io::Result<()> {
                     .max_age(3600),
             )
             .service(authenticate)
+            .service(index)
     })
     .bind("127.0.0.1:8999")?
     .run()
