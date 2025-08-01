@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
 use gloo_net::http::Request;
 use shared::models::login_model::LoginModel;
+use web_sys::RequestCredentials;
 
 #[component]
 pub fn Login() -> Element {
@@ -12,15 +13,24 @@ pub fn Login() -> Element {
             let json = serde_json::to_string(&login_model).unwrap();
             println!("click");
 
-            let resp = Request::post("http://localhost:8999/auth")
+            let resp = Request::post("http://127.0.0.1:8997/auth")
                 .header("Content-Type", "application/json")
+                .credentials(RequestCredentials::Include)
                 .body(json);
 
             match resp {
                 // Parse data from here, such as storing a response token
                 Ok(req) => {
-                    req.send().await.unwrap();
-                    println!("Login successful!")
+                    let res = req.send().await;
+                    match res {
+                        Ok(response) => {
+                            let response_text = response.text().await.unwrap();
+                            println!("Response: {}", response_text);
+                        }
+                        Err(err) => {
+                            println!("Error: {}", err);
+                        }
+                    }
                 }
 
                 //Handle any errors from the fetch here
