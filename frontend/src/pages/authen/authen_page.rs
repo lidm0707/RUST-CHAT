@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use gloo_net::http::Request;
-use shared::models::login_model::LoginModel;
+use shared::models::auth_model::AuthModel;
 use web_sys::RequestCredentials;
 
 #[component]
@@ -9,7 +9,7 @@ pub fn Login() -> Element {
         spawn(async move {
             let username = evt.values()["username"].as_value();
             let password = evt.values()["password"].as_value();
-            let login_model = LoginModel::new(username, password);
+            let login_model = AuthModel::new(username, password);
             let json = serde_json::to_string(&login_model).unwrap();
             println!("click");
 

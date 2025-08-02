@@ -1,1 +1,2 @@
-pub mod login_model;
+pub mod auth_model;
+pub mod claims_model;

@@ -1,15 +1,19 @@
 use actix_cors::Cors;
 use actix_web::middleware::Logger;
+
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
-use shared::models::login_model::LoginModel;
+use backend::repositories::auth_repository::{MockUserRepo, UserRepository};
+use backend::services::auth_service::AuthService;
+use shared::models::auth_model::AuthModel;
 
 #[post("/auth")]
-async fn authenticate(info: web::Json<LoginModel>) -> impl Responder {
+async fn authenticate(info: web::Json<AuthModel>) -> impl Responder {
     let username = &info.username;
 
     let password = &info.password;
-
-    if username == "admin" && password == "secret" {
+    let repo = MockUserRepo::new();
+    let check = AuthService::new(repo);
+    if check.verify_password(username, password) {
         HttpResponse::Ok()
             .append_header((
                 "Set-Cookie",
@@ -29,7 +33,6 @@ async fn index() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Starting server on http://localhost:8997");
-
     HttpServer::new(|| {
         App::new()
             .wrap(Logger::default()) // เพิ่ม logger middleware

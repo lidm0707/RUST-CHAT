@@ -1,13 +1,13 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct LoginModel {
+pub struct AuthModel {
     pub username: String,
     pub password: String,
 }
 
-impl LoginModel {
+impl AuthModel {
     pub fn new(username: String, password: String) -> Self {
-        LoginModel { username, password }
+        AuthModel { username, password }
     }
 }
