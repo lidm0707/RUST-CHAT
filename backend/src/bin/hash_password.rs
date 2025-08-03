@@ -1,4 +1,4 @@
-use argon2::password_hash::{PasswordHash, SaltString};
+use argon2::password_hash::SaltString;
 use argon2::{Argon2, PasswordHasher};
 use clap::Parser;
 use rand::rngs::OsRng;

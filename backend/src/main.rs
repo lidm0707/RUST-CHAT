@@ -1,11 +1,8 @@
 use actix_cors::Cors;
 use actix_web::middleware::Logger;
 
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 use backend::handlers::auth_handler::authenticate;
-use backend::repositories::auth_repository::{MockUserRepo, UserRepository};
-use backend::services::auth_service::AuthService;
-use shared::models::auth_model::AuthModel;
 
 #[get("/health")]
 async fn index() -> impl Responder {

@@ -1,7 +1,5 @@
 use std::error::Error;
 
-use argon2::{Argon2, PasswordHash, PasswordVerifier};
-use jsonwebtoken::{encode, EncodingKey, Header};
 use shared::models::claims_model::Claims;
 
 use crate::{
