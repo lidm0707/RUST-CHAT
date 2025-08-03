@@ -25,7 +25,6 @@ where
 
     pub fn verify_password(&self, username: &str, password: &str) -> bool {
         let hashed = self.user_repository.get_hashed_password(username);
-        // verify_password(password, &hashed);
-        true
+        verify_password(password, &hashed)
     }
 }

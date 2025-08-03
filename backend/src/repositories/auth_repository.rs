@@ -30,8 +30,8 @@ impl UserRepository for MockUserRepo {
 
     fn get_hashed_password(&self, user_id: &str) -> String {
         match user_id {
-            "1" => "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi".to_string(),
-            "2" => "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi".to_string(),
+            "1" => "$argon2id$v=19$m=19456,t=2,p=1$BAmAcdzZsNStic+NRnqlcA$R1qrD74cu4J1WS5Qgbne9EGEQcKeEZ9QSBK3gwWPwZg".to_string(),
+            "2" => "$argon2id$v=19$m=19456,t=2,p=1$BAmAcdzZsNStic+NRnqlcA$R1qrD74cu4J1WS5Qgbne9EGEQcKeEZ9QSBK3gwWPwZg".to_string(),
             _ => "".to_string(),
         }
     }
