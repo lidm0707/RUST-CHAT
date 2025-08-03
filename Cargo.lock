@@ -479,6 +479,7 @@ dependencies = [
  "argon2",
  "clap",
  "env_logger",
+ "futures-util",
  "jsonwebtoken",
  "log",
  "rand 0.8.5",
@@ -1938,8 +1939,8 @@ name = "frontend"
 version = "0.1.0"
 dependencies = [
  "dioxus",
+ "dioxus-logger",
  "futures",
- "futures-util",
  "gloo-net",
  "serde",
  "serde_json",

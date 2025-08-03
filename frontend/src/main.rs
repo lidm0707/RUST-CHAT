@@ -1,4 +1,4 @@
-use dioxus::prelude::*;
+use dioxus::{logger::tracing::Level, prelude::*};
 use frontend::routes::Route; // <--- CHANGED: Use `futures` directly as per gloo-net docs
 
 const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");

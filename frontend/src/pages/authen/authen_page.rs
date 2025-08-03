@@ -7,6 +7,9 @@ use crate::routes::Route;
 
 #[component]
 pub fn Login() -> Element {
+    let navigator = use_navigator();
+    let hello = use_signal(|| "hello".to_string());
+    let mut hello2 = hello.clone();
     let onsubmit = move |evt: FormEvent| {
         spawn(async move {
             let username = evt.values()["username"].as_value();
@@ -28,7 +31,7 @@ pub fn Login() -> Element {
                         Ok(response) => {
                             let response_text = response.text().await.unwrap();
                             println!("Response: {}", response_text);
-                            let navigator = use_navigator();
+
                             navigator.push(Route::Home {});
                         }
                         Err(err) => {
@@ -46,7 +49,35 @@ pub fn Login() -> Element {
     };
 
     rsx! {
+        button {
+            class: "ml-2 bg-blue text-white px-4 py-2 rounded hover:bg-red-500",
+            onclick: move |_| {
+                println!("click help");
+                hello2.set("button".to_string());
+                let mut hello_in = hello2.clone();
+                spawn(async move {
+                    // 👇 resp คือ RequestBuilder
+                    let resp = Request::get("http://127.0.0.1:8997/test/hello")
+                        .header("Content-Type", "application/json")
+                        .credentials(RequestCredentials::Include);
 
+                    // 👇 ส่ง request และ await
+                    match resp.send().await {
+                        Ok(response) => {
+                            let text = response.text().await.unwrap_or("no body".to_string());
+                            println!("✅ Response: {}", text);
+                            hello_in.set("pass".to_string());
+                            navigator.push(Route::Home {});
+                        }
+                        Err(err) => {
+                            println!("❌ Fetch error: {:?}", err);
+                            hello_in.set("fail".to_string());
+                        }
+                    }
+                });
+            },
+            "{hello}"
+        }
         div{ class: "h-full w-full",
 
         div {
