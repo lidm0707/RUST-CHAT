@@ -7,3 +7,14 @@ pub struct Claims {
     pub permissions: Vec<String>,
     pub exp: usize,
 }
+
+impl Claims {
+    pub fn new(username: String) -> Self {
+        Claims {
+            sub: username,
+            roles: vec![],
+            permissions: vec![],
+            exp: 0,
+        }
+    }
+}

@@ -1,3 +1,4 @@
+pub mod handlers;
 pub mod infrastructures;
 pub mod middlewares;
 pub mod repositories;

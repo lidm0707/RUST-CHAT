@@ -3,6 +3,8 @@ use gloo_net::http::Request;
 use shared::models::auth_model::AuthModel;
 use web_sys::RequestCredentials;
 
+use crate::routes::Route;
+
 #[component]
 pub fn Login() -> Element {
     let onsubmit = move |evt: FormEvent| {
@@ -26,6 +28,8 @@ pub fn Login() -> Element {
                         Ok(response) => {
                             let response_text = response.text().await.unwrap();
                             println!("Response: {}", response_text);
+                            let navigator = use_navigator();
+                            navigator.push(Route::Home {});
                         }
                         Err(err) => {
                             println!("Error: {}", err);
