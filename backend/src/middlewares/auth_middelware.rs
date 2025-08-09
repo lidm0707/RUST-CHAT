@@ -22,7 +22,7 @@ pub struct AuthenMiddleware;
 impl<S, B> Transform<S, ServiceRequest> for AuthenMiddleware
 where
     S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
-    S::Future: 'static,
+    S::Future: 'static, // make response body is static
     B: 'static,
 {
     type Response = ServiceResponse<B>;
