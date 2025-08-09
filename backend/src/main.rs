@@ -15,6 +15,10 @@ async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello test")
 }
 
+async fn me() -> impl Responder {
+    HttpResponse::Ok().body("me 1")
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Starting server on http://localhost:8997");
@@ -31,9 +35,10 @@ async fn main() -> std::io::Result<()> {
                     .max_age(3600),
             )
             .service(
-                web::resource("/test/hello")
+                web::scope("/api")
                     .wrap(AuthenMiddleware)
-                    .route(web::get().to(hello)), // ✅ ใช้ web::get().to(...) แทน route(handler)
+                    .route("/me", web::get().to(me))
+                    .route("/hello ", web::get().to(hello)), // ✅ ใช้ web::get().to(...) แทน route(handler)
             )
             .service(authenticate)
             .service(index)

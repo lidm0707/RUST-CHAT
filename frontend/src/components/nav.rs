@@ -4,8 +4,8 @@ use dioxus::prelude::*;
 #[component]
 pub fn Navbar() -> Element {
     rsx! {
-        div{class:"flex bg-gray-800",
-            div {class:" p-3 text-white w-auto",
+        div{class:"flex", // maybe take another broken
+            div {class:" p-3 bg-gray-800 text-white w-auto",
                 div{class:"text-orange-500", h1{"RUSTCHAT"}}
                 div{
                     Link {
@@ -17,9 +17,8 @@ pub fn Navbar() -> Element {
                 Link {
                 to: Route::Chat {},
                 "Chat"
-            }}
+                }}
                 div{}
-
             }
             Outlet::<Route> {}
         }
