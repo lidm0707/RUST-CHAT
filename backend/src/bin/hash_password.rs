@@ -1,7 +1,7 @@
+use argon2::password_hash::rand_core::OsRng;
 use argon2::password_hash::SaltString;
 use argon2::{Argon2, PasswordHasher};
 use clap::Parser;
-use rand::rngs::OsRng;
 
 /// Simple CLI tool to hash passwords using Argon2id
 #[derive(Parser, Debug)]
