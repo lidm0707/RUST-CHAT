@@ -28,7 +28,7 @@ pub fn Home() -> Element {
     });
 
     rsx! {
-        div { class: "bg-gray-100", "Welcome" }
+        div { class: "bg-gray-100 h-screen w-screen", "Welcome" }
         div{"{error_state :?}"}
     }
 }

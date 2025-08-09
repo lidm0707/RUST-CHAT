@@ -15,9 +15,6 @@ done
 
 echo '✅ Backend ready! Starting frontend...'
 
-# รัน frontend ใน terminal ใหม่
-gnome-terminal -- bash -c "
-    cd frontend || { echo 'frontend folder not found'; exit 1; }
-    dx serve --package frontend;
-    exec bash
-"
+# รัน frontend ใน terminal เดิม
+cd frontend || { echo "frontend folder not found"; exit 1; }
+dx serve --package frontend
