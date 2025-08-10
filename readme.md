@@ -1,4 +1,4 @@
-![Alt text](/home/moo-tu/git/rust_chat/image_readme/poc1.png)
+![Alt text](image_readme/poc1.png)
 
 
 
