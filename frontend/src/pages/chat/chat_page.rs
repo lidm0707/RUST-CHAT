@@ -1,11 +1,12 @@
-use dioxus::logger::tracing::info;
 use dioxus::prelude::*;
 use gloo_net::http::Request;
+use web_sys::console;
 
 use super::chat_layout::Bg;
 use crate::pages::chat::box_customer_short::BoxCustomerShort;
 use crate::pages::chat::chat_hook::{send_channel, ChatSignal};
 use crate::pages::chat::chat_model::MessageSender;
+use crate::requset::protect::request_protect_get;
 use crate::routes::Route; // <--- CHANGED: Use `futures` directly as per gloo-net docs
                           // Shared navbar component.
 
@@ -25,7 +26,26 @@ pub fn Chat() -> Element {
     });
 
     let send = send_channel(chat_signal.msg_type);
+    let navigator = use_navigator();
+    let error_state = use_signal(|| None::<String>);
+    console::log_1(&"ho".into());
 
+    spawn(async move {
+        if let Err(res) = request_protect_get().await {
+            console::log_1(&format!("{:?}", res).into());
+            error_state.clone().set(Some("wait".to_string()));
+            error_state
+                .clone()
+                .set(Some("Failed to fetch data".to_string()));
+        }
+    });
+    use_effect(move || {
+        let error_state = error_state.clone();
+        let _ = error_state.read();
+        if let Some(_) = error_state.cloned() {
+            navigator.push(Route::Login {});
+        }
+    });
     rsx! {
         div {
             class: "p-4 w-full",
@@ -66,47 +86,13 @@ pub fn Chat() -> Element {
             button {
                 class: "ml-2 bg-blue text-white px-4 py-2 rounded ",
                 onclick: move |_| {
-                    info!("click send");
 
                     send.send(chat_signal.text_msg.read().to_string());
                     chat_signal.msg_type.write().push(MessageSender::User(chat_signal.text_msg.read().to_string()));
                 },
                 "ส่งข้อความ"
             }
-            button {
-                class: "ml-2 bg-blue text-white px-4 py-2 rounded hover:bg-red-500",
-                onclick: move |_| {
-                    println!("click help");
-                    spawn(async move {
-                        let resp = Request::get("http://127.0.0.1:8997/hello")
-                            .header("Content-Type", "application/json")
-                            .json("");
 
-                        match resp {
-                            // Parse data from here, such as storing a response token
-                            Ok(req) => {
-                                let res = req.send().await;
-                                match res {
-                                    Ok(response) => {
-                                        let response_text = response.text().await.unwrap();
-                                        println!("Response: {}", response_text);
-                                        navigator.push(Route::Home {});
-                                    }
-                                    Err(err) => {
-                                        println!("Error: {}", err);
-                                    }
-                                }
-                            }
-
-                            //Handle any errors from the fetch here
-                            Err(_err) => {
-                                println!("Login failed - you need a login server running on localhost:8080.")
-                            }
-                        }
-                    });
-                },
-                "HELLO"
-            }
 
 
 

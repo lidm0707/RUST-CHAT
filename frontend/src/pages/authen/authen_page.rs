@@ -32,7 +32,7 @@ pub fn Login() -> Element {
                             let response_text = response.text().await.unwrap();
                             println!("Response: {}", response_text);
 
-                            navigator.push(Route::Home {});
+                            navigator.push(Route::Chat {});
                         }
                         Err(err) => {
                             println!("Error: {}", err);
