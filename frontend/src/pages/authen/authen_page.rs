@@ -3,7 +3,7 @@ use gloo_net::http::Request;
 use shared::models::auth_model::AuthModel;
 use web_sys::RequestCredentials;
 
-use crate::routes::Route;
+use crate::{requset::authen_request::request_authen, routes::Route};
 
 #[component]
 pub fn Login() -> Element {
@@ -15,34 +15,18 @@ pub fn Login() -> Element {
             let username = evt.values()["username"].as_value();
             let password = evt.values()["password"].as_value();
             let login_model = AuthModel::new(username, password);
-            let json = serde_json::to_string(&login_model).unwrap();
-            println!("click");
-
-            let resp = Request::post("http://127.0.0.1:8997/auth")
-                .header("Content-Type", "application/json")
-                .credentials(RequestCredentials::Include)
-                .body(json);
+            let resp = request_authen(login_model).await;
 
             match resp {
                 // Parse data from here, such as storing a response token
-                Ok(req) => {
-                    let res = req.send().await;
-                    match res {
-                        Ok(response) => {
-                            let response_text = response.text().await.unwrap();
-                            println!("Response: {}", response_text);
+                Ok(response) => {
+                    let response_text = response.text().await.unwrap();
+                    println!("Response: {}", response_text);
 
-                            navigator.push(Route::Chat {});
-                        }
-                        Err(err) => {
-                            println!("Error: {}", err);
-                        }
-                    }
+                    navigator.push(Route::Chat {});
                 }
-
-                //Handle any errors from the fetch here
-                Err(_err) => {
-                    println!("Login failed - you need a login server running on localhost:8080.")
+                Err(err) => {
+                    println!("Error: {}", err);
                 }
             }
         })
