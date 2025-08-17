@@ -16,6 +16,7 @@ wasm-bindgen = "0.2.100"
 web-sys = "0.3.77"
 shared = { path = "../shared" }
 dioxus-logger = "0.6.2"
+tracing = "0.1.41"
 
 [features]
 default = ["web"]

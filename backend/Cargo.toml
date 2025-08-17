@@ -14,3 +14,8 @@ actix-cors = "0.7.1"
 argon2 = { version = "0.5", features = ["std"] }
 clap = { version = "4", features = ["derive"] }
 futures-util = "0.3.31"
+actix-ws = "0.3.0"
+chrono = "0.4.41"
+serde_json = "1.0.142"
+tokio = { version = "1.47", features = ["full"] }
+uuid = { version = "1", features = ["v4"] }

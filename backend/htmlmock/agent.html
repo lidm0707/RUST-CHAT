@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Agent Chat</title>
+    </head>
+    <body>
+        <h3>Agent Chat</h3>
+        <div id="chat"></div>
+        <input type="text" id="msg" placeholder="Type a message" />
+        <button onclick="sendMsg()">Send</button>
+
+        <script>
+            const ws = new WebSocket("ws://127.0.0.1:8997/ws/1/1");
+
+            ws.onopen = () => console.log("Connected as agent");
+            ws.onmessage = (e) => {
+                const chatDiv = document.getElementById("chat");
+                chatDiv.innerHTML += `<p>${e.data}</p>`;
+            };
+
+            function sendMsg() {
+                const input = document.getElementById("msg");
+                const msg = input.value;
+                if (msg.trim() === "") return;
+                ws.send(
+                    JSON.stringify({
+                        content: msg,
+                        sender_type: "Agent",
+                        sender_id: 1,
+                    }),
+                );
+                input.value = "";
+            }
+        </script>
+    </body>
+</html>

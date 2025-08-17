@@ -1,7 +1,6 @@
 use dioxus::prelude::*;
-use web_sys::console;
 
-use crate::{requset::protect::request_protect_get, routes::Route};
+use crate::routes::Route;
 
 #[component]
 pub fn Home() -> Element {

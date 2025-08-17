@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use gloo_net::http::Request;
+// use gloo_net::http::Request;
 use web_sys::console;
 
 use super::chat_layout::Bg;
@@ -12,7 +12,6 @@ use crate::routes::Route; // <--- CHANGED: Use `futures` directly as per gloo-ne
 
 #[component]
 pub fn Chat() -> Element {
-    let navigator = use_navigator();
     let mut chat_signal = ChatSignal::new();
     let _ = use_resource(move || async move {
         let _ = chat_signal.msg_type.read();

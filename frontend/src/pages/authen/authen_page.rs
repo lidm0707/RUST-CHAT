@@ -51,7 +51,7 @@ pub fn Login() -> Element {
                             let text = response.text().await.unwrap_or("no body".to_string());
                             println!("✅ Response: {}", text);
                             hello_in.set("pass".to_string());
-                            navigator.push(Route::Home {});
+                            navigator.push(Route::Chat {});
                         }
                         Err(err) => {
                             println!("❌ Fetch error: {:?}", err);
