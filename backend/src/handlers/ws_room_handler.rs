@@ -1,7 +1,8 @@
 use actix_web::{get, web, Error, HttpRequest, HttpResponse};
 use actix_ws::{handle, Message, Session};
+use futures::lock::Mutex;
 use log::debug;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 
 use crate::models::appstate::{AppState, CacheRoom};
 
@@ -25,7 +26,7 @@ pub async fn chat_ws(
 
     // เก็บ session เข้า room
     {
-        let mut rooms = state.rooms.lock().unwrap();
+        let mut rooms = state.rooms.lock().await;
         rooms
             .entry(room_id)
             .or_insert_with(|| CacheRoom {
@@ -44,16 +45,15 @@ pub async fn chat_ws(
             match msg {
                 Message::Text(txt) => {
                     // Broadcast ไปทุก agent ใน room
-                    let rooms = state_clone.rooms.lock().unwrap();
+                    let rooms = state_clone.rooms.lock().await;
                     if let Some(room) = rooms.get(&room_id) {
                         if let Some(ref ss_agents) = room.ss_agents {
                             for agent in ss_agents.iter() {
-                                let agent = Arc::clone(agent);
+                                let agent: Arc<Mutex<Session>> = Arc::clone(agent);
                                 let txt = txt.clone();
                                 actix_web::rt::spawn(async move {
-                                    if let Ok(mut s) = agent.lock() {
-                                        let _ = s.text(txt).await;
-                                    }
+                                    let mut s = agent.lock().await; // lock() คืน MutexGuard โดยตรง
+                                    let _ = s.text(txt).await;
                                 });
                             }
                         }
