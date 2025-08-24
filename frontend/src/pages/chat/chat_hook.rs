@@ -9,7 +9,7 @@ pub fn send_channel(msg_lr: Signal<Vec<MessageSender>>) -> Coroutine<String> {
     let mut msg_lr = msg_lr;
 
     use_coroutine(move |mut rx: UnboundedReceiver<String>| async move {
-        let ws = WebSocket::open("wss://echo.websocket.org").unwrap();
+        let ws = WebSocket::open("ws://127.0.0.1:8997/ws/agent/1/1/1").unwrap();
         let (mut write, mut read) = ws.split();
 
         spawn(async move {

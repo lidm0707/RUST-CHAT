@@ -3,31 +3,129 @@
     <head>
         <meta charset="UTF-8" />
         <title>Customer Chat</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+
+            #status {
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+
+            #chat {
+                border: 1px solid #ccc;
+                padding: 10px;
+                height: 250px;
+                overflow-y: auto;
+                margin-bottom: 10px;
+                background: #f9f9f9;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .msg {
+                padding: 8px 12px;
+                border-radius: 12px;
+                max-width: 70%;
+                word-wrap: break-word;
+            }
+
+            .me {
+                background: #dcf8c6;
+                align-self: flex-end;
+                text-align: right;
+            }
+
+            .server {
+                background: #ffffff;
+                border: 1px solid #ddd;
+                align-self: flex-start;
+                text-align: left;
+            }
+
+            #msg {
+                width: 70%;
+                padding: 6px;
+            }
+
+            button {
+                padding: 6px 12px;
+            }
+        </style>
     </head>
     <body>
         <h3>Customer Chat</h3>
+        <div id="status">🔴 Disconnected</div>
         <div id="chat"></div>
         <input type="text" id="msg" placeholder="Type a message" />
         <button onclick="sendMsg()">Send</button>
 
         <script>
-            const ws = new WebSocket("ws://127.0.0.1:8997/ws/1/1");
+            let ws;
+            const statusDiv = document.getElementById("status");
+            const chatDiv = document.getElementById("chat");
 
-            ws.onopen = () => console.log("Connected to chat server");
-            ws.onmessage = (e) => {
-                const chatDiv = document.getElementById("chat");
-                chatDiv.innerHTML += `<p>${e.data}</p>`;
-            };
+            function connect() {
+                ws = new WebSocket("ws://127.0.0.1:8997/ws/1/1/1");
+
+                ws.onopen = () => {
+                    console.log("✅ Connected to chat server");
+                    statusDiv.innerHTML = "🟢 Connected";
+                };
+
+                ws.onclose = () => {
+                    statusDiv.innerHTML = "🔴 Disconnected";
+                    // auto reconnect after 3s
+                    setTimeout(connect, 3000);
+                };
+
+                ws.onmessage = (e) => {
+                    try {
+                        const msg = JSON.parse(e.data);
+                        addMessage(
+                            msg.sender_type || "Server",
+                            msg.content || e.data,
+                            "server",
+                        );
+                    } catch {
+                        addMessage("Server", e.data, "server");
+                    }
+                };
+            }
+
+            function addMessage(sender, content, type) {
+                const msgDiv = document.createElement("div");
+                msgDiv.className = `msg ${type}`;
+                msgDiv.innerHTML = `<b>${sender}:</b> ${content}`;
+                chatDiv.appendChild(msgDiv);
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+            }
 
             function sendMsg() {
                 const input = document.getElementById("msg");
-                const msg = input.value;
-                if (msg.trim() === "") return;
-                ws.send(
-                    JSON.stringify({ content: msg, sender_type: "Customer" }),
-                );
+                const msg = input.value.trim();
+                if (msg === "") return;
+
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(
+                        JSON.stringify({
+                            content: msg,
+                            sender_type: "Customer",
+                        }),
+                    );
+                    addMessage("Me", msg, "me");
+                } else {
+                    addMessage("System", "⚠️ Not connected", "server");
+                }
+
                 input.value = "";
             }
+
+            // เริ่ม connect ทันที
+            connect();
         </script>
     </body>
 </html>
